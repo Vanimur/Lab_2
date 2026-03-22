@@ -34,7 +34,7 @@ void GenerateRandomMatr(int **Matr, size_t row, size_t column, int min, int max)
     int range = max - min + 1;
 
     for (size_t i = 0; i < row; i++) {
-        if (Matr[i] == NULL) return;
+        if (Matr[i] != NULL)
         for (size_t j = 0; j < column; j++) {
             Matr[i][j] = rand() % range + min;
         }
@@ -55,13 +55,14 @@ void PrintMatr(int **Matr, size_t row, size_t column)
     }
 }
 
-void FreeMatr(int **Matr, size_t rows) {
-    if (Matr == NULL) return;
+void FreeMatr(int ***Matr, size_t rows) {
+    if (Matr == NULL || *Matr == NULL) return;
 
     for (size_t i = 0; i < rows; i++) {
-        free(Matr[i]);
+        free((*Matr)[i]);
     }
-    free(Matr);
+    free(*Matr);
+    *Matr = NULL;
 }
 
 int main()
@@ -72,6 +73,6 @@ int main()
     srand(time(0));
     GenerateRandomMatr(Matr, 3, 3, 1, 10);
     PrintMatr(Matr, 3, 3);
-    FreeMatr(Matr, 3);
+    FreeMatr(&Matr, 3);
     return 0;
 }
