@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <limits.h>
 
 int **CreateMatr(size_t row, size_t column)
 {
@@ -76,13 +77,18 @@ int **Matr_Multiply(int **Matr_A, size_t row_A, size_t col_A, int **Matr_B, size
         if (Matr_A[i] != NULL){ // т.к. строка NULL, тоесть пуста (заполнена 0), то в результирующей останутся 0
 
           for (size_t j = 0; j < col_B; j++){
-              int sum = 0;
+              long long sum = 0;
 
               for (size_t k = 0; k < col_A; k++){
-                  if (Matr_B[k] != NULL) sum += Matr_A[i][k] * Matr_B[k][j];
+                  if (Matr_B[k] != NULL) sum += (long long) Matr_A[i][k] * Matr_B[k][j];
               }
 
-              Result[i][j] = sum;
+              if (sum > INT_MAX || sum < INT_MIN) {
+                  FreeMatr(&Result, row_A);
+                  return NULL;
+              }
+
+              Result[i][j] = (int) sum;
           }
         }
       }
@@ -95,12 +101,33 @@ int main()
     size_t r1 = 3, c1 = 3;
     size_t r2 = 3, c2 = 3;
 
+    //size_t r1 = 2, c1 = 3;
+    //size_t r2 = 3, c2 = 3;
+
+    //size_t r1 = 2, c1 = 3; // неправильное соотношение строк и столбцов
+    //size_t r2 = 2, c2 = 3;
+
+    //size_t r1 = 1, c1 = 3; // минимальные размеры
+    //size_t r2 = 3, c2 = 1;
+
+    //size_t r1 = 0, c1 = 0;
+    //size_t r2 = 0, c2 = 0;
+
     int **A = CreateMatr(r1, c1);
     int **B = CreateMatr(r2, c2);
 
     srand(time(0));
     GenerateRandomMatr(A, r1, c1, 0, 1);
     GenerateRandomMatr(B, r2, c2, 0, 1);
+
+    //GenerateRandomMatr(A, r1, c1, 0, 0);
+    //GenerateRandomMatr(B, r2, c2, 0, 0);
+
+    //free(A[1]); // разреженная матрица А
+    //A[1] = NULL;
+
+    //free(B[2]); // разреженная матрица B
+    //B[2] = NULL;
 
     printf("A:\n");
     PrintMatr(A, r1, c1);
@@ -109,6 +136,8 @@ int main()
     PrintMatr(B, r2, c2);
 
     int **C = Matr_Multiply(A, r1, c1, B, r2, c2);
+    // **C = Matr_Multiply(NULL, r1, c1, B, r2, c2);
+    //int **C = Matr_Multiply(A, r1, c1, NULL, r2, c2);
 
     if (C != NULL) {
             printf("Result:\n");
