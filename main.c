@@ -135,9 +135,14 @@ int main()
     printf("B:\n");
     PrintMatr(B, r2, c2);
 
+
     int **C = Matr_Multiply(A, r1, c1, B, r2, c2);
+
     // **C = Matr_Multiply(NULL, r1, c1, B, r2, c2);
     //int **C = Matr_Multiply(A, r1, c1, NULL, r2, c2);
+
+    //int **p;
+    //int **C = Matr_Multiply(p, r1, c1, B, r2, c2);
 
     if (C != NULL) {
             printf("Result:\n");
