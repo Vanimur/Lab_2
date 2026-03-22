@@ -65,14 +65,61 @@ void FreeMatr(int ***Matr, size_t rows) {
     *Matr = NULL;
 }
 
+int **Matr_Multiply(int **Matr_A, size_t row_A, size_t col_A, int **Matr_B, size_t row_B, size_t col_B)
+{
+    if (col_A != row_B || Matr_A == NULL || Matr_B == NULL) return NULL;
+
+    int **Result = CreateMatr(row_A, col_B);
+    if (Result == NULL) return NULL;
+
+    for (size_t i = 0; i < row_A; i++){
+        if (Matr_A[i] != NULL){ // т.к. строка NULL, тоесть пуста (заполнена 0), то в результирующей останутся 0
+
+          for (size_t j = 0; j < col_B; j++){
+              int sum = 0;
+
+              for (size_t k = 0; k < col_A; k++){
+                  if (Matr_B[k] != NULL) sum += Matr_A[i][k] * Matr_B[k][j];
+              }
+
+              Result[i][j] = sum;
+          }
+        }
+      }
+    return Result;
+}
+
+
 int main()
 {
-    int **Matr = NULL;
+    size_t r1 = 3, c1 = 3;
+    size_t r2 = 3, c2 = 3;
 
-    Matr = CreateMatr(3, 3);
+    int **A = CreateMatr(r1, c1);
+    int **B = CreateMatr(r2, c2);
+
     srand(time(0));
-    GenerateRandomMatr(Matr, 3, 3, 1, 10);
-    PrintMatr(Matr, 3, 3);
-    FreeMatr(&Matr, 3);
+    GenerateRandomMatr(A, r1, c1, 0, 1);
+    GenerateRandomMatr(B, r2, c2, 0, 1);
+
+    printf("A:\n");
+    PrintMatr(A, r1, c1);
+    printf("-------------------\n");
+    printf("B:\n");
+    PrintMatr(B, r2, c2);
+
+    int **C = Matr_Multiply(A, r1, c1, B, r2, c2);
+
+    if (C != NULL) {
+            printf("Result:\n");
+            PrintMatr(C, r1, c2);
+    } else {
+        printf("Error: Matrices are incompatible or memory failed.\n");
+    }
+
+    FreeMatr(&A, r1);
+    FreeMatr(&B, r2);
+    FreeMatr(&C, r1);
+
     return 0;
 }
