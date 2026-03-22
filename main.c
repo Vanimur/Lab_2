@@ -95,12 +95,30 @@ int main()
     size_t r1 = 3, c1 = 3;
     size_t r2 = 3, c2 = 3;
 
+    //size_t r1 = 3, c1 = 2;
+    //size_t r2 = 3, c2 = 3;
+
+    //size_t r1 = 3, c1 = 3;
+    //size_t r2 = 2, c2 = 3;
+
+    //size_t r1 = 2, c1 = 3;
+    //size_t r2 = 3, c2 = 2;
+
     int **A = CreateMatr(r1, c1);
     int **B = CreateMatr(r2, c2);
 
     srand(time(0));
     GenerateRandomMatr(A, r1, c1, 0, 1);
     GenerateRandomMatr(B, r2, c2, 0, 1);
+
+    //GenerateRandomMatr(A, r1, c1, 0, 0);
+    //GenerateRandomMatr(B, r2, c2, 0, 0);
+
+    //free(A[1]); // разреженная матрица А
+    //A[1] = NULL;
+
+    //free(B[2]); // разреженная матрица B
+    //B[2] = NULL;
 
     printf("A:\n");
     PrintMatr(A, r1, c1);
@@ -109,6 +127,11 @@ int main()
     PrintMatr(B, r2, c2);
 
     int **Res = Matr_Combining(A, r1, c1, B, r2, c2);
+    //int **Res = Matr_Combining(NULL, r1, c1, B, r2, c2);
+    //int **Res = Matr_Combining(A, r1, c1, NULL, r2, c2);
+
+    //int **p;
+    //int **Res = Matr_Combining(*p, r1, c1, NULL, r2, c2);
 
     if (Res) {
         printf("Result:\n");
@@ -116,6 +139,8 @@ int main()
         FreeMatr(&Res, r1);
     }
 
+    //int **p;
+    //int **C = Matr_Multiply(p, r1, c1, B, r2, c2);
     FreeMatr(&A, r1);
     FreeMatr(&B, r2);
     return 0;
