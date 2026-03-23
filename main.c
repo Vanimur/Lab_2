@@ -44,6 +44,7 @@ void GenerateRandomMatr(int **Matr, size_t row, size_t column, int min, int max)
 
 void PrintMatr(int **Matr, size_t row, size_t column)
 {
+    if (Matr == NULL) return;
     for (size_t ix = 0; ix < row; ix++) {
         if (Matr[ix]) {
             for (size_t jx = 0; jx < column; jx++) {
