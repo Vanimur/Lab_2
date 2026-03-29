@@ -68,20 +68,24 @@ void FreeMatr(int ***Matr, size_t rows) {
 
 int **Matr_Combining(int **Matr_A, size_t row_A, size_t col_A, int **Matr_B, size_t row_B, size_t col_B)
 {
-    if (row_A != row_B || Matr_A == NULL || Matr_B == NULL) return NULL;
+    if (Matr_A == NULL || Matr_B == NULL) return NULL;
 
     size_t new_col = col_A + col_B;
-    int **Result = CreateMatr(row_A, new_col);
+    size_t max_row = row_A;
+    if (row_B > row_A){
+        max_row = row_B;
+    }
+    int **Result = CreateMatr(max_row, new_col);
     if (Result == NULL) return NULL;
 
-    for (size_t i = 0; i < row_A; i++) {
-        if (Matr_A[i] != NULL) {
+    for (size_t i = 0; i < max_row; i++) {
+        if (i < row_A && Matr_A[i] != NULL) {
             for (size_t j = 0; j < col_A; j++) {
                 Result[i][j] = Matr_A[i][j];
             }
         }
 
-        if (Matr_B[i] != NULL) {
+        if (i < row_B && Matr_B[i] != NULL) {
             for (size_t j = 0; j < col_B; j++) {
                 Result[i][col_A + j] = Matr_B[i][j];
             }
@@ -92,8 +96,8 @@ int **Matr_Combining(int **Matr_A, size_t row_A, size_t col_A, int **Matr_B, siz
 
 int main()
 {
-    size_t r1 = 3, c1 = 3;
-    size_t r2 = 3, c2 = 3;
+    //size_t r1 = 3, c1 = 3;
+    //size_t r2 = 3, c2 = 3;
 
     //size_t r1 = 3, c1 = 2;
     //size_t r2 = 3, c2 = 3;
@@ -103,6 +107,23 @@ int main()
 
     //size_t r1 = 2, c1 = 3;
     //size_t r2 = 3, c2 = 2;
+
+    size_t r1 = 5, c1 = 2; // A > B
+    size_t r2 = 2, c2 = 2;
+
+    //size_t r1 = 2, c1 = 4; // B > A
+    //size_t r2 = 6, c2 = 2;
+
+    //size_t r1 = 1, c1 = 1;
+    //size_t r2 = 4, c2 = 1;
+
+    //size_t r1 = 0, c1 = 0;
+    //size_t r2 = 3, c2 = 3;
+
+    size_t max_row = r1;
+    if (r2 > r1){
+        max_row = r2;
+    }
 
     int **A = CreateMatr(r1, c1);
     int **B = CreateMatr(r2, c2);
@@ -117,8 +138,8 @@ int main()
     //free(A[1]); // разреженная матрица А
     //A[1] = NULL;
 
-    //free(B[2]); // разреженная матрица B
-    //B[2] = NULL;
+    //free(B[1]); // разреженная матрица B
+    //B[1] = NULL;
 
     printf("A:\n");
     PrintMatr(A, r1, c1);
@@ -135,8 +156,8 @@ int main()
 
     if (Res) {
         printf("Result:\n");
-        PrintMatr(Res, r1, c1 + c2);
-        FreeMatr(&Res, r1);
+        PrintMatr(Res, max_row, c1 + c2);
+        FreeMatr(&Res, max_row);
     }
 
     //int **p;
